@@ -1,4 +1,5 @@
 效果(gif掉真实际效果可以运行demo)：
+
 ![](http://upload-images.jianshu.io/upload_images/1464492-3084654c0bf21717.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 demo已经放在[GitHub](https://github.com/Fendouzhe/LRAnimations),里面有更多动画效果，在不断更新，欢迎下载查看，有帮助可以star，谢谢！

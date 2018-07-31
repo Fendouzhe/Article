@@ -1,7 +1,7 @@
-#概述
+# 概述
 RunLoop作为iOS中一个基础组件和线程有着千丝万缕的关系，同时也是很多常见技术的幕后功臣。尽管在平时多数开发者很少直接使用RunLoop，但是理解RunLoop可以帮助开发者更好的利用多线程编程模型，同时也可以帮助开发者解答日常开发中的一些疑惑。本文将从RunLoop源码着手，结合RunLoop的实际应用来逐步解开它的神秘面纱。
 
-#开源的RunloopRef
+# 开源的RunloopRef
 通常所说的RunLoop指的是NSRunloop或者CFRunloopRef，CFRunloopRef是纯C的函数，而NSRunloop仅仅是CFRunloopRef的OC封装，并未提供额外的其他功能，因此下面主要分析CFRunloopRef，苹果已经开源了CoreFoundation源代码，因此很容易找到CFRunloop源代码。
 从代码可以看出CFRunloopRef其实就是**__CFRunloop这个结构体指针（按照OC的思路我们可以将RunLoop看成一个对象），这个对象的运行才是我们通常意义上说的运行循环，核心方法是__CFRunloopRun()**，为了便于阅读就不再直接贴源代码，放一段伪代码方便大家阅读：
 ```
@@ -75,7 +75,9 @@ int32_t __CFRunLoopRun()
 >随着Swift的开源苹果也维护了一个Swift版本的跨平台CoreFoundation版本，除了mac平台它还是适配了Linux和Windows平台。但是鉴于目前很多关于Runloop的讨论都是以OC版展开的，所以这里也主要分析OC版本。
 
 下图描述了Runloop运行流程（基本描述了上面Runloop的核心流程，当然可以查看官方[The Run Loop Sequence of Events](https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html#//apple_ref/doc/uid/10000057i-CH16-SW23)描述）：
+
 ![](http://upload-images.jianshu.io/upload_images/1464492-3e9619940d7b7815.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
 整个流程并不复杂（需要注意的就是_黄色_区域的消息处理中并不包含source0，因为它在循环开始之初就会处理），整个流程其实就是一种Event Loop的实现，其他平台均有类似的实现，只是这里叫做Runloop。但是既然RunLoop是一个消息循环，谁来管理和运行Runloop？那么它接收什么类型的消息？休眠过程是怎么样的？如何保证休眠时不占用系统资源？如何处理这些消息以及何时退出循环？还有一系列问题需要解开。
 
 >注意的是尽管CFRunLoopPerformBlock在上图中作为唤醒机制有所体现，但事实上执行CFRunLoopPerformBlock只是入队，下次RunLoop运行才会执行，而如果需要立即执行则必须调用CFRunLoopWakeUp。
@@ -140,15 +142,19 @@ Runloop Mode
 >注意：我们常常还会碰到一些系统框架自定义Mode，例如Foundation中NSConnectionReplyMode。还有一些系统私有Mode，例如：GSEventReceiveRunLoopMode接受系统事件，UIInitializationRunLoopMode App启动过程中初始化Mode。更多系统或框架Mode查看这里
 
 CFRunLoopRef和CFRunloopMode、CFRunLoopSourceRef/CFRunloopTimerRef/CFRunLoopObserverRef关系如下图：
+
 ![](http://upload-images.jianshu.io/upload_images/1464492-c5737b448ba869ad.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
 那么CFRunLoopSourceRef、CFRunLoopTimerRef和CFRunLoopObserverRef究竟是什么？它们在Runloop运行流程中起到什么作用呢？
-#Source
+# Source
 首先看一下官方Runloop结构图（注意下图的Input Source Port和前面流程图中的Source0并不对应，而是对应Source1。Source1和Timer都属于端口事件源，不同的是所有的Timer都共用一个端口“Mode Timer Port”，而每个Source1都有不同的对应端口）：
+
 ![](http://upload-images.jianshu.io/upload_images/1464492-58747d97ff3b446c.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
 再结合前面RunLoop核心运行流程可以看出Source0(负责App内部事件，由App负责管理触发，例如UITouch事件)和Timer（又叫Timer Source，基于时间的触发器，上层对应NSTimer）是两个不同的Runloop事件源（当然Source0是Input Source中的一类，Input Source还包括Custom Input Source，由其他线程手动发出），RunLoop被这些事件唤醒之后就会处理并调用事件处理方法（CFRunLoopTimerRef的回调指针和CFRunLoopSourceRef均包含对应的回调指针）。
 但是对于CFRunLoopSourceRef除了Source0之外还有另一个版本就是Source1，Source1除了包含回调指针外包含一个mach port，和Source0需要手动触发不同，Source1可以监听系统端口和其他线程相互发送消息，它能够主动唤醒RunLoop(由操作系统内核进行管理，例如CFMessagePort消息)。官方也指出可以自定义Source，因此对于CFRunLoopSourceRef来说它更像一种协议，框架已经默认定义了两种实现，如果有必要开发人员也可以自定义，详细情况可以查看[官方文档](https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html)。
 
-#Observer
+# Observer
 ```
     struct __CFRunLoopObserver {
         CFRuntimeBase _base;
@@ -174,7 +180,7 @@ CFRunLoopRef和CFRunloopMode、CFRunLoopSourceRef/CFRunloopTimerRef/CFRunLoopObs
         kCFRunLoopAllActivities = 0x0FFFFFFFU
     };
 ```
-#Call out
+# Call out
 在开发过程中几乎所有的操作都是通过Call out进行回调的(无论是Observer的状态通知还是Timer、Source的处理)，而系统在回调时通常使用如下几个函数进行回调(换句话说你的代码其实最终都是通过下面几个函数来负责调用的，即使你自己监听Observer也会先调用下面的函数然后间接通知你，所以在调用堆栈中经常看到这些函数)：
 ```
     static void __CFRUNLOOP_IS_CALLING_OUT_TO_AN_OBSERVER_CALLBACK_FUNCTION__();
@@ -185,11 +191,14 @@ CFRunLoopRef和CFRunloopMode、CFRunLoopSourceRef/CFRunloopTimerRef/CFRunLoopObs
     static void __CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE1_PERFORM_FUNCTION__();
 ```
 例如在控制器的touchBegin中打入断点查看堆栈（由于UIEvent是Source0，所以可以看到一个Source0的Call out函数CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE0_PERFORM_FUNCTION调用）：
+
 ![](http://upload-images.jianshu.io/upload_images/1464492-2c94911c09b131fb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-#RunLoop休眠
+# RunLoop休眠
 其实对于Event Loop而言RunLoop最核心的事情就是保证线程在没有消息时休眠以避免占用系统资源，有消息时能够及时唤醒。RunLoop的这个机制完全依靠系统内核来完成，具体来说是苹果操作系统核心组件Darwin中的Mach来完成的（[Darwin](https://opensource.apple.com)是开源的）。可以从下图最底层Kernel中找到Mach：
+
 ![](http://upload-images.jianshu.io/upload_images/1464492-5e7f60ca3b3f596b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
 Mach是Darwin的核心，可以说是内核的核心，提供了进程间通信（IPC）、处理器调度等基础服务。在Mach中，进程、线程间的通信是以消息的方式来完成的，消息在两个Port之间进行传递（这也正是Source1之所以称之为Port-based Source的原因，因为它就是依靠系统发送消息到指定的Port来触发的）。消息的发送和接收使用<mach/message.h>中的mach_msg()函数（事实上苹果提供的Mach API很少，并不鼓励我们直接调用这些API）：
 ```
     /*
@@ -212,7 +221,7 @@ Mach是Darwin的核心，可以说是内核的核心，提供了进程间通信�
  ```                       
 而mach_msg()的本质是一个调用mach_msg_trap(),这相当于一个系统调用，会触发内核状态切换。当程序静止时，RunLoop停留在**__CFRunLoopServiceMachPort(waitSet, &msg, sizeof(msg_buffer), &livePort, poll ? 0 : TIMEOUT_INFINITY, &voucherState, &voucherCopy),而这个函数内部就是调用了mach_msg**让程序处于休眠状态。
 
-#Runloop和线程的关系
+# Runloop和线程的关系
 Runloop是基于pthread进行管理的，pthread是基于c的跨平台多线程操作底层API。它是mach thread的上层封装（可以参见[Kernel Programming Guide](https://developer.apple.com/library/content/documentation/Darwin/Conceptual/KernelProgramming/Mach/Mach.html)），和NSThread一一对应（而NSThread是一套面向对象的API，所以在iOS开发中我们也几乎不用直接使用pthread）。
 
 ![](http://upload-images.jianshu.io/upload_images/1464492-a5a45864fc59c202.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
@@ -227,8 +236,8 @@ iOS开发过程中对于开发者而言更多的使用的是NSRunloop,它默认�
 run方法对应上面CFRunloopRef中的CFRunLoopRun并不会退出，除非调用CFRunLoopStop();通常如果想要永远不会退出RunLoop才会使用此方法，否则可以使用runUntilDate。
 runMode:beforeDate:则对应CFRunLoopRunInMode(mode,limiteDate,true)方法,只执行一次，执行完就退出；通常用于手动控制RunLoop（例如在while循环中）。
 runUntilDate:方法其实是CFRunLoopRunInMode(kCFRunLoopDefaultMode,limiteDate,false)，执行完并不会退出，继续下一次RunLoop直到timeout。
-#RunLoop应用
-##NSTimer
+# RunLoop应用
+## NSTimer
 前面一直提到Timer Source作为事件源，事实上它的上层对应就是NSTimer（其实就是CFRunloopTimerRef）这个开发者经常用到的定时器（底层基于使用mk_timer实现），甚至很多开发者接触RunLoop还是从NSTimer开始的。其实NSTimer定时器的触发正是基于RunLoop运行的，所以使用NSTimer之前必须注册到RunLoop，但是RunLoop为了节省资源并不会在非常准确的时间点调用定时器，如果一个任务执行时间较长，那么当错过一个时间点后只能等到下一个时间点执行，并不会延后执行（NSTimer提供了一个tolerance属性用于设置宽容度，如果确实想要使用NSTimer并且希望尽可能的准确，则可以设置此属性）。
 
 NSTimer的创建通常有两种方式，尽管都是类方法，一种是timerWithXXX，另一种scheduedTimerWithXXX。
@@ -421,7 +430,7 @@ NSTimer的创建通常有两种方式，尽管都是类方法，一种是timerWi
 >CADisplayLink是一个执行频率（fps）和屏幕刷新相同（可以修改preferredFramesPerSecond改变刷新频率）的定时器，它也需要加入到RunLoop才能执行。与NSTimer类似，CADisplayLink同样是基于CFRunloopTimerRef实现，底层使用mk_timer（可以比较加入到RunLoop前后RunLoop中timer的变化）。和NSTimer相比它精度更高（尽管NSTimer也可以修改精度），不过和NStimer类似的是如果遇到大任务它仍然存在丢帧现象。通常情况下CADisaplayLink用于构建帧动画，看起来相对更加流畅，而NSTimer则有更广泛的用处。
 
 
-#AutoreleasePool
+# AutoreleasePool
 AutoreleasePool是另一个与RunLoop相关讨论较多的话题。其实从RunLoop源代码分析，AutoreleasePool与RunLoop并没有直接的关系，之所以将两个话题放到一起讨论最主要的原因是因为在iOS应用启动后会注册两个Observer管理和维护AutoreleasePool。不妨在应用程序刚刚启动时打印currentRunLoop可以看到系统默认注册了很多个Observer，其中有两个Observer的callout都是** _ wrapRunLoopWithAutoreleasePoolHandler**，这两个是和自动释放池相关的两个监听。
 
 ```
@@ -434,19 +443,19 @@ AutoreleasePool是另一个与RunLoop相关讨论较多的话题。其实从RunL
 主线程的其他操作通常均在这个AutoreleasePool之内（main函数中），以尽可能减少内存维护操作(当然你如果需要显式释放【例如循环】时可以自己创建AutoreleasePool否则一般不需要自己创建)。
 其实在应用程序启动后系统还注册了其他Observer（例如即将进入休眠时执行注册回调_UIGestureRecognizerUpdateObserver用于手势处理、回调为_ZN2CA11Transaction17observer_callbackEP19__CFRunLoopObservermPv的Observer用于界面实时绘制更新）和多个Source1（例如context为CFMachPort的Source1用于接收硬件事件响应进而分发到应用程序一直到UIEvent），这里不再一一详述。
 
-#UI更新
+# UI更新
 如果打印App启动之后的主线程RunLoop可以发现另外一个callout为**_ZN2CA11Transaction17observer_callbackEP19__CFRunLoopObservermPv**的Observer，这个监听专门负责UI变化后的更新，比如修改了frame、调整了UI层级（UIView/CALayer）或者手动设置了setNeedsDisplay/setNeedsLayout之后就会将这些操作提交到全局容器。而这个Observer监听了主线程RunLoop的即将进入休眠和退出状态，一旦进入这两种状态则会遍历所有的UI更新并提交进行实际绘制更新。
 通常情况下这种方式是完美的，因为除了系统的更新，还可以利用setNeedsDisplay等方法手动触发下一次RunLoop运行的更新。但是如果当前正在执行大量的逻辑运算可能UI的更新就会比较卡，因此facebook推出了[AsyncDisplayKit](https://github.com/facebookarchive/AsyncDisplayKit)来解决这个问题。AsyncDisplayKit其实是将UI排版和绘制运算尽可能放到后台，将UI的最终更新操作放到主线程（这一步也必须在主线程完成），同时提供一套类UIView或CALayer的相关属性，尽可能保证开发者的开发习惯。这个过程中AsyncDisplayKit在主线程RunLoop中增加了一个Observer监听即将进入休眠和退出RunLoop两种状态,收到回调时遍历队列中的待处理任务一一执行。
 
-#NSURLConnection
+# NSURLConnection
 在前面的[网络开发](http://www.cnblogs.com/kenshincui/p/4042190.html#requestAndResponse)的文章中已经介绍过NSURLConnection的使用，一旦启动NSURLConnection以后就会不断调用delegate方法接收数据，这样一个连续的的动作正是基于RunLoop来运行。
 一旦NSURLConnection设置了delegate会立即创建一个线程com.apple.NSURLConnectionLoader，同时内部启动RunLoop并在NSDefaultMode模式下添加4个Source0。其中CFHTTPCookieStorage用于处理cookie ;CFMultiplexerSource负责各种delegate回调并在回调中唤醒delegate内部的RunLoop（通常是主线程）来执行实际操作。
 早期版本的AFNetworking库也是基于NSURLConnection实现，为了能够在后台接收delegate回调AFNetworking内部创建了一个空的线程并启动了RunLoop，当需要使用这个后台线程执行任务时AFNetworking通过performSelector: onThread: 将这个任务放到后台线程的RunLoop中。
 
-#GCD和RunLoop的关系
+# GCD和RunLoop的关系
 在RunLoop的源代码中可以看到用到了GCD的相关内容，但是RunLoop本身和GCD并没有直接的关系。当调用了dispatch_async(dispatch_get_main_queue(), <#^(void)block#>)时libDispatch会向主线程RunLoop发送消息唤醒RunLoop，RunLoop从消息中获取block，并且在__CFRUNLOOP_IS_SERVICING_THE_MAIN_DISPATCH_QUEUE__回调里执行这个block。不过这个操作仅限于主线程，其他线程dispatch操作是全部由libDispatch驱动的。
 
-#更多RunLoop使用
+# 更多RunLoop使用
 前面看了很多RunLoop的系统应用和一些知名第三方库使用，那么除了这些究竟在实际开发过程中我们自己能不能适当的使用RunLoop帮我们做一些事情呢？
 
 思考这个问题其实只要看RunLoopRef的包含关系就知道了，RunLoop包含多个Mode，而它的Mode又是可以自定义的，这么推断下来其实无论是Source1、Timer还是Observer开发者都可以利用，但是通常情况下不会自定义Timer，更不会自定义一个完整的Mode，利用更多的其实是Observer和Mode的切换。

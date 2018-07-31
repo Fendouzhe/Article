@@ -1,4 +1,4 @@
-####1、 对以下一组数据进行降序排序（冒泡排序）。“24，17，85，13，9，54，76，45，5，63”
+#### 1、 对以下一组数据进行降序排序（冒泡排序）。“24，17，85，13，9，54，76，45，5，63”
 
 ```
 int main(int argc, char *argv[]) {
@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
 
 }
 ```
-####2、 对以下一组数据进行升序排序（选择排序）。“86, 37, 56, 29, 92, 73, 15, 63, 30, 8”
+#### 2、 对以下一组数据进行升序排序（选择排序）。“86, 37, 56, 29, 92, 73, 15, 63, 30, 8”
 
 ```
 void sort(int a[],int n)
@@ -100,7 +100,7 @@ int main(int argc, const char * argv[]) {
 }
 ```
 
-####3、 快速排序算法
+#### 3、 快速排序算法
 
 ```
 void sort(int *a, int left, int right) {
@@ -147,7 +147,7 @@ sort(a, i+1, right);
 ```
 
 
-####4、 归并排序
+#### 4、 归并排序
 
 ```
 void merge(int sourceArr[], int tempArr[], int startIndex, int midIndex, int endIndex) {
@@ -233,7 +233,7 @@ int main(int argc, const char * argv[]) {
 }
 ```
 
-####5、 实现二分查找算法（编程语言不限）
+#### 5、 实现二分查找算法（编程语言不限）
 
 ```
 int bsearchWithoutRecursion(int array[],int low,int high,int target) {
@@ -294,7 +294,7 @@ return binary_search(arr, mid+1, high, key);
 }
 ```
 
-####6、 如何实现链表翻转（链表逆序）？ 
+#### 6、 如何实现链表翻转（链表逆序）？
 思路：每次把第二个元素提到最前面来。
 
 ```
@@ -429,7 +429,7 @@ int main(int argc, const char * argv[]) {
 }
 ```
 
-####7、 实现一个字符串“how are you”的逆序输出（编程语言不限）。如给定字符串为“hello world”,输出结果应当为“world hello”。
+#### 7、 实现一个字符串“how are you”的逆序输出（编程语言不限）。如给定字符串为“hello world”,输出结果应当为“world hello”。
 
 ```
 int spliterFunc(char *p) {
@@ -485,7 +485,7 @@ int spliterFunc(char *p) {
 }
 ```
 
-####8、 给定一个字符串，输出本字符串中只出现一次并且最靠前的那个字符的位置？如“abaccddeeef”,字符是b,输出应该是2。
+#### 8、 给定一个字符串，输出本字符串中只出现一次并且最靠前的那个字符的位置？如“abaccddeeef”,字符是b,输出应该是2。
 
 ```
 char *strOutPut(char *);
@@ -562,7 +562,7 @@ int compareDifferentChar(char c, char *s) {
 }
 ```
 
-####9、 二叉树的先序遍历为FBACDEGH,中序遍历为：ABDCEFGH,请写出这个二叉树的后序遍历结果。
+#### 9、 二叉树的先序遍历为FBACDEGH,中序遍历为：ABDCEFGH,请写出这个二叉树的后序遍历结果。
 
 ADECBHGF
 
@@ -617,7 +617,7 @@ int isPrime(int n)
 }
 ```
 
-####11、 求两个整数的最大公约数。
+#### 11、 求两个整数的最大公约数。
 
 ```
 int gcd(int a, int b) {

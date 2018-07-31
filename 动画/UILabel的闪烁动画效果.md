@@ -1,9 +1,11 @@
 效果如下：
+
 ![](http://upload-images.jianshu.io/upload_images/1464492-0a269cba6bfc32ce.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 代码已经放在[GitHub](https://github.com/Fendouzhe/LRAnimations),里面有更多动画效果，在不断更新，欢迎下载查看，喜欢可以star.
 
 实现如下：
+
 LRShineLabel.h
 ```
 #import <UIKit/UIKit.h>

@@ -1,9 +1,10 @@
 效果（gift掉帧显得卡，实际效果见[GitHub](https://link.jianshu.com/?t=https%3A%2F%2Fgithub.com%2FFendouzhe%2FLRAnimations)）：
+
 ![](http://upload-images.jianshu.io/upload_images/1464492-f4bb612c9d723ed5.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 
-#实现步骤：
-#####1 创建粒子Layer
+# 实现步骤：
+##### 1 创建粒子Layer
 ```
     // 创建粒子Layer
     CAEmitterLayer *snowEmitter = [CAEmitterLayer layer];
@@ -23,7 +24,7 @@
     // 将粒子Layer添加进图层中
     [self.view.layer addSublayer:snowEmitter];
 ```
-#####2 创建粒子添加到CAEmitterLayer
+##### 2 创建粒子添加到CAEmitterLayer
 ```
     // 创建雪花类型的粒子
     CAEmitterCell *snowflake    = [CAEmitterCell emitterCell];
@@ -55,9 +56,10 @@
     snowEmitter.emitterCells = @[snowflake];
 ```
 运行效果:
+
 ![](http://upload-images.jianshu.io/upload_images/1464492-d9fd3e87c175b149.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-#####3 给CAEmitterLayer创建遮盖
+##### 3 给CAEmitterLayer创建遮盖
 ```
     UIImage *image      = [UIImage imageNamed:@"alpha"];
     _movedMask          = [CALayer layer];
@@ -67,9 +69,10 @@
     snowEmitter.mask    = _movedMask;
 ```
 运行：
+
 ![](http://upload-images.jianshu.io/upload_images/1464492-c086244913cd5ae6.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-#####4 创建拖拽的View添加拖动手势
+##### 4 创建拖拽的View添加拖动手势
 ```
    // 拖拽的View 和遮罩一样位置
     UIView *dragView = [[UIView alloc] initWithFrame:_movedMask.frame];
@@ -79,7 +82,7 @@
     [dragView addGestureRecognizer:recognizer];
 ```
 
-#####5 实现拖动方法，拖动view也让遮罩一起拖动。
+##### 5 实现拖动方法，拖动view也让遮罩一起拖动。
 ```
 - (void)handlePan:(UIPanGestureRecognizer *)recognizer {
     // 拖拽
@@ -94,6 +97,7 @@
 }
 ```
 最终效果：
+
 ![](http://upload-images.jianshu.io/upload_images/1464492-2a2619df43ae539a.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 源码已经放在[GitHub](https://link.jianshu.com/?t=https%3A%2F%2Fgithub.com%2FFendouzhe%2FLRAnimations),里面有更多动画效果，在不断更新，欢迎下载查看，有帮助可以star，谢谢！

@@ -1,5 +1,7 @@
 最近在项目中有个这样的需求:整个APP中界面也竖屏为主,且不能自动横竖屏切换,在线学习视频播放界面可以根据手机的方向横竖屏切换;其实实现起来也并不难,关于视图是否能旋转主要还是有没有设置支持,在工程的General-->Device Orientation里可以进行这些设置:
+
 ![](http://upload-images.jianshu.io/upload_images/1464492-b4f0375db9069b4f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
 这些设置后就可以在项目中用代码控制了,控制视图是否能够自动旋转,支持哪些方向主要是用了下面的三个方法:
 
 ```

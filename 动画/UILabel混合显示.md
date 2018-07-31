@@ -1,5 +1,7 @@
 动画效果
+
 ![](http://upload-images.jianshu.io/upload_images/1464492-d087235d5aed8792.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
 实现思路：同一位置创建两个一样大小view，一个upView一个downView，其分别有一个和本身同样大小的子控件UILabel，展示相同的文字。upView在上面，红色背景色，其上面的label是白色字体，透明背景。downView在下面，透明背景色，红色边框，其上面的label是红色字体，透明背景。通过改变upView的宽度实现动画效果。
 
 源码(源码没有进行封装,细节都没有处理,望见谅)代码如下：

@@ -1,6 +1,8 @@
 iOS中Layer的坐标系统:
+
 ![](http://upload-images.jianshu.io/upload_images/1464492-3341b9491b8c6f2b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 效果:
+
 ![](http://upload-images.jianshu.io/upload_images/1464492-d4bf097018833671.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ```
@@ -33,11 +35,13 @@ iOS中Layer的坐标系统:
 
 颜色分配严格遵守Layer的坐标系统,locations,startPoint,endPoint都是以Layer坐标系统进行计算的.
 而locations并不是表示颜色值所在位置,它表示的是颜色在Layer坐标系相对位置处要开始进行渐变颜色了.
+
 ![](http://upload-images.jianshu.io/upload_images/1464492-310c8e81db247b34.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 CAGradientLayer 的这四个属性 colors locations startPoint endPoint 都是可以进行动画的哦.
 
 稍微复杂点的动画效果:
+
 ![](http://upload-images.jianshu.io/upload_images/1464492-493c1e18b33438eb.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ```
