@@ -1,4 +1,5 @@
 效果：
+
 ![1](http://upload-images.jianshu.io/upload_images/1464492-29b0bb480fc8b93b.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ![2](http://upload-images.jianshu.io/upload_images/1464492-29d472ff413a2d4c.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
@@ -7,6 +8,7 @@
 代码已经放在[GitHub](https://github.com/Fendouzhe/LRAnimations),里面有更多动画效果，在不断更新，欢迎下载查看，喜欢可以star.
 
 实现：
+
 LRMulticolorView.h
 ```
 #import <UIKit/UIKit.h>
