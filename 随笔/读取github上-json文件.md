@@ -1,0 +1,9 @@
+```
+ github提供的读取资源文件格式如下：
+   https://raw.githubusercontent.com/:owner/:repo/master/:path
+```
+```
+ 比如：
+  原来路径：https://github.com/Fendouzhe/lwwJson/blob/master/lww.json
+  改后路径：https://raw.githubusercontent.com/Fendouzhe/lwwJson/master/lww.json
+```
