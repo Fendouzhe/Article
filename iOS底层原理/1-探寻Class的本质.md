@@ -335,3 +335,5 @@ int main(int argc, const char * argv[]) {
 
 上图中通过地址证明meta-class的superclass指向父类的meta-class，基类的meta-class的superclass指向基类的class类。
 
+![](https://upload-images.jianshu.io/upload_images/9610202-54e6b69e7dc9109f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
