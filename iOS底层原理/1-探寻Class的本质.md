@@ -46,29 +46,29 @@ struct objc_class {
 
 这部分代码相信在文章中很常见，但是`OBJC2_UNAVAILABLE;`说明这些代码已经不在使用了。那么目前objc_class的结构是什么样的呢？我们通过objc源码中去查找objc_class结构体的内容。
 
-![image](//upload-images.jianshu.io/upload_images/1434508-75abc9232b83db85.png?imageMogr2/auto-orient/strip|imageView2/2/w/859)
+![image](https://upload-images.jianshu.io/upload_images/1434508-75abc9232b83db85.png?imageMogr2/auto-orient/strip|imageView2/2/w/859)
 
 我们发现这个结构体继承 objc_object 并且结构体内有一些函数，因为这是c++结构体，在c上做了扩展，因此结构体中可以包含函数。我们来到objc_object内，截取部分代码
 
-![image](//upload-images.jianshu.io/upload_images/1434508-81a411802b17d31b.png?imageMogr2/auto-orient/strip|imageView2/2/w/655)
+![image](https://upload-images.jianshu.io/upload_images/1434508-81a411802b17d31b.png?imageMogr2/auto-orient/strip|imageView2/2/w/655)
 
 我们发现objc_object中有一个isa指针，那么objc_class继承objc_object，也就同样拥有一个isa指针
 
 那么我们之前了解到的，类中存储的类的成员变量信息，实例方法，属性名等这些信息在哪里呢。我们来到class_rw_t中，截取部分代码，我们发现class_rw_t中存储着方法列表，属性列表，协议列表等内容。
 
-![image](//upload-images.jianshu.io/upload_images/1434508-1540af143cec6308.png?imageMogr2/auto-orient/strip|imageView2/2/w/838)
+![image](https://upload-images.jianshu.io/upload_images/1434508-1540af143cec6308.png?imageMogr2/auto-orient/strip|imageView2/2/w/838)
 
 而class_rw_t是通过bits调用data方法得来的，我们来到data方法内部实现。我们可以看到，data函数内部仅仅对bits进行&FAST_DATA_MASK操作
 
-![image](//upload-images.jianshu.io/upload_images/1434508-4f441b789cc40b23.png?imageMogr2/auto-orient/strip|imageView2/2/w/777)
+![image](https://upload-images.jianshu.io/upload_images/1434508-4f441b789cc40b23.png?imageMogr2/auto-orient/strip|imageView2/2/w/777)
 
 而成员变量信息则是存储在class_ro_t内部中的，我们来到class_ro_t内查看。
 
-![image](//upload-images.jianshu.io/upload_images/1434508-3d6e5a8a1c24c179.png?imageMogr2/auto-orient/strip|imageView2/2/w/679)
+![image](https://upload-images.jianshu.io/upload_images/1434508-3d6e5a8a1c24c179.png?imageMogr2/auto-orient/strip|imageView2/2/w/679)
 
 最后总结通过一张图进行总结
 
-![image](//upload-images.jianshu.io/upload_images/1434508-80913b9be913a55e.png?imageMogr2/auto-orient/strip|imageView2/2/w/958)
+![image](https://upload-images.jianshu.io/upload_images/1434508-80913b9be913a55e.png?imageMogr2/auto-orient/strip|imageView2/2/w/958)
 
 ### 如何证明上述内容是正确的。
 
@@ -291,13 +291,13 @@ int main(int argc, const char * argv[]) {
 
 至此，我们再次拿出那张经典的图，挨个分析图中isa指针和superclass指针的指向
 
-![image](//upload-images.jianshu.io/upload_images/1434508-013837d2dbfcd7c3.png?imageMogr2/auto-orient/strip|imageView2/2/w/454)
+![image](https://upload-images.jianshu.io/upload_images/1434508-013837d2dbfcd7c3.png?imageMogr2/auto-orient/strip|imageView2/2/w/454)
 
 ### instance对象
 
 首先我们来看instance对象，我们通过上一篇文章知道，instance对象中存储着isa指针和其他成员变量，并且instance对象的isa指针是指向其**类对象**地址的。我们首先分析上述代码中我们创建的object，person，student三个instance对象与其相对应的类对象objectClass，personClass，studentClass。
 
-![image](//upload-images.jianshu.io/upload_images/1434508-bc6fb8bea3a661e2.png?imageMogr2/auto-orient/strip|imageView2/2/w/944)
+![image](https://upload-images.jianshu.io/upload_images/1434508-bc6fb8bea3a661e2.png?imageMogr2/auto-orient/strip|imageView2/2/w/944)
 
 从上图中我们可以发现instance对象中确实存储了isa指针和其成员变量，同时将instance对象的isa指针经过&运算之后计算出的地址确实是其相应类对象的内存地址。由此我们证明isa，superclass指向图中的1，2，3号线。
 
@@ -305,13 +305,13 @@ int main(int argc, const char * argv[]) {
 
 接着我们来看class对象，同样通过上一篇文章，我们明确class对象中存储着isa指针，superclass指针，以及类的属性信息，类的成员变量信息，类的对象方法，和类的协议信息，而通过上面对object源码的分析，我们知道这些信息存储在class对象的class_rw_t中，我们通过强制转化来窥探其中的内容。如下图
 
-![image](//upload-images.jianshu.io/upload_images/1434508-64122cec0f202346.png?imageMogr2/auto-orient/strip|imageView2/2/w/452)
+![image](https://upload-images.jianshu.io/upload_images/1434508-64122cec0f202346.png?imageMogr2/auto-orient/strip|imageView2/2/w/452)
 
 上图中我们通过模拟对person类对象调用.data函数，即对bits进行&FAST_DATA_MASK(0x00007ffffffffff8UL)运算，并转化为class_rw_t。即上图中的personClassData。其中我们发现成员变量信息，对象方法，属性等信息只显示first第一个，如果想要拿到更多的需要通过代码将指针后移获取。而上图中的instaceSize = 16也同person对象中isa指针8个字节+_age4个字节+_height4个字节相对应起来。这里不在展开对objectClassData及studentClassData进行分析，基本内容同personClassData相同。
 
 那么类对象中的isa指针和superclass指针的指向是否如那张经典的图示呢？我们来验证一下。
 
-![image](//upload-images.jianshu.io/upload_images/1434508-746b7fbaeabb59eb.png?imageMogr2/auto-orient/strip|imageView2/2/w/1164)
+![image](https://upload-images.jianshu.io/upload_images/1434508-746b7fbaeabb59eb.png?imageMogr2/auto-orient/strip|imageView2/2/w/1164)
 
 通过上图中的内存地址的分析，由此我们证明isa，superclass指向图中，isa指针的4，5，6号线，以及superclass指针的10，11，12号线。
 
@@ -321,17 +321,17 @@ int main(int argc, const char * argv[]) {
 
 与class对象相同，我们同样通过模拟对person元类对象调用.data函数，即对bits进行&FAST_DATA_MASK(0x00007ffffffffff8UL)运算，并转化为class_rw_t。
 
-![image](//upload-images.jianshu.io/upload_images/1434508-5d3c7609eaf50d31.png?imageMogr2/auto-orient/strip|imageView2/2/w/529)
+![image](https://upload-images.jianshu.io/upload_images/1434508-5d3c7609eaf50d31.png?imageMogr2/auto-orient/strip|imageView2/2/w/529)
 
 首先我们可以看到结构同personClassData相同，并且成员变量及属性列表等信息为空，而methods中存储着类方法personClassMethod。
 
 接着来验证isa及superclass指针的指向是否同上图序号标注一样。
 
-![image](//upload-images.jianshu.io/upload_images/1434508-3a7213b54d6ce4a6.png?imageMogr2/auto-orient/strip|imageView2/2/w/1135)
+![image](https://upload-images.jianshu.io/upload_images/1434508-3a7213b54d6ce4a6.png?imageMogr2/auto-orient/strip|imageView2/2/w/1135)
 
 上图中通过地址证明meta-class的isa指向基类的meta-class，基类的isa指针也指向自己。
 
-![image](//upload-images.jianshu.io/upload_images/1434508-5679c692b3c43724.png?imageMogr2/auto-orient/strip|imageView2/2/w/1076)
+![image](https://upload-images.jianshu.io/upload_images/1434508-5679c692b3c43724.png?imageMogr2/auto-orient/strip|imageView2/2/w/1076)
 
 上图中通过地址证明meta-class的superclass指向父类的meta-class，基类的meta-class的superclass指向基类的class类。
 
