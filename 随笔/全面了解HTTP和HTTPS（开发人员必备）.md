@@ -104,7 +104,7 @@ Proxy-Connection: Keep-alive
 
 Http和Https协议请求时都会通过Tcp三次握手建立Tcp连接。那么，三次握手是指什么呢？
 
-![image](//upload-images.jianshu.io/upload_images/9942787-afa31b861fb0f247.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/960)
+![image](https://upload-images.jianshu.io/upload_images/9942787-afa31b861fb0f247.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/960)
 
 那么，为什么一定要三次握手呢，一次可以吗？两次可以吗？带着这些问题，我们来分析一下为什么必须是三次握手。
 
@@ -116,7 +116,7 @@ Http和Https协议请求时都会通过Tcp三次握手建立Tcp连接。那么�
 
 下面，我们介绍一下三次握手具体发送的内容，用一张图描述如下：
 
-![image](//upload-images.jianshu.io/upload_images/9942787-495afdbac8f2012c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/875)
+![image](https://upload-images.jianshu.io/upload_images/9942787-495afdbac8f2012c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/875)
 
 首先，介绍一下几个概念：
 
@@ -141,7 +141,7 @@ Http和Https协议请求时都会通过Tcp三次握手建立Tcp连接。那么�
 
 下面是Tcp报文段首部格式图，对于理解Tcp协议很重要：
 
-![image](//upload-images.jianshu.io/upload_images/9942787-69d610f456877e52.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/669)
+![image](https://upload-images.jianshu.io/upload_images/9942787-69d610f456877e52.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/669)
 
 ## Https协议/SSL协议
 
@@ -175,7 +175,7 @@ SSL/TLS协议基本思路是采用公钥加密法（最有名的是RSA加密算�
 
 下面用一张图表示SSL加密传输过程：
 
-![image](//upload-images.jianshu.io/upload_images/9942787-ed94df5036e93072.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000)
+![image](https://upload-images.jianshu.io/upload_images/9942787-ed94df5036e93072.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000)
 
 详细介绍一下图中过程：
 
@@ -197,15 +197,15 @@ SSL证书是一个二进制文件，里面包含经过认证的网站公钥和�
 
 EV证书浏览器地址栏样式：
 
-![image](//upload-images.jianshu.io/upload_images/9942787-0f852a848091326f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000)
+![image](https://upload-images.jianshu.io/upload_images/9942787-0f852a848091326f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000)
 
 OV证书浏览器地址栏样式：
 
-![image](//upload-images.jianshu.io/upload_images/9942787-b7ecd5c6f53e7a58.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/962)
+![image](https://upload-images.jianshu.io/upload_images/9942787-b7ecd5c6f53e7a58.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/962)
 
 DV证书浏览器样式：
 
-![image](//upload-images.jianshu.io/upload_images/9942787-4b8628cffd5f8617.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/962)
+![image](https://upload-images.jianshu.io/upload_images/9942787-4b8628cffd5f8617.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/962)
 
 按覆盖范围分类：
 

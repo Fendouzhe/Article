@@ -4,9 +4,9 @@
 
 点击Project->Info，默认有Debug和Release两个Configuration，顾名思义Debug用于调试，Release用于发布，区别是Debug默认添加了预编译宏DEBUG=1，Release不能调试程序，并且Release编译时做了优化。点击Configurations选项卡下面的加号，分别复制一个Debug和Release的Configuration，这里我取名为Debug_a和Release_a，代表马甲包a的两个Configuration
 
-![image](//upload-images.jianshu.io/upload_images/1070332-28886043c2ea691a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000)
+![image](https://upload-images.jianshu.io/upload_images/1070332-28886043c2ea691a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000)
 
-![image](//upload-images.jianshu.io/upload_images/1070332-777f2aa3d65ea910.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/703)
+![image](https://upload-images.jianshu.io/upload_images/1070332-777f2aa3d65ea910.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/703)
 
 **注意**：新建完Configuration之后请重新执行pod install命令
 
@@ -14,25 +14,25 @@
 
 为上一步新建的Configuration再新建Scheme，这里我新建了两个Scheme，命名为马甲包a_release和马甲包a_debug，在Manage Schemes里面把右边的Shared选项勾选，否则在git上无法同步。
 
-![image](//upload-images.jianshu.io/upload_images/1070332-fc817b61402791b0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/508)
+![image](https://upload-images.jianshu.io/upload_images/1070332-fc817b61402791b0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/508)
 
-![image](//upload-images.jianshu.io/upload_images/1070332-6ecd8b485feaa368.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/831)
+![image](https://upload-images.jianshu.io/upload_images/1070332-6ecd8b485feaa368.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/831)
 
 在Edit Scheme里面把Run和Archive模式改成对应新建的Build Configuration
 
-![image](//upload-images.jianshu.io/upload_images/1070332-a80425aeef3615ee.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/730)
+![image](https://upload-images.jianshu.io/upload_images/1070332-a80425aeef3615ee.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/730)
 
-![image](//upload-images.jianshu.io/upload_images/1070332-e3a66224c8f5ff44.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/729)
+![image](https://upload-images.jianshu.io/upload_images/1070332-e3a66224c8f5ff44.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/729)
 
 ## 3.配置AppIcon和LaunchImage
 
 新建一个App Icon和Launch Image文件夹，重新命名，拖入图片。
 
-![image](//upload-images.jianshu.io/upload_images/1070332-23d61c64fe1ba6f4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/495)
+![image](https://upload-images.jianshu.io/upload_images/1070332-23d61c64fe1ba6f4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/495)
 
 选择Targets->Build Settings，搜索asset，在Asset Catalog App Icon Set Name 和 Asset Catalog Launch Image Set Name 配置各个Configuration所对应的图片文件夹名称。
 
-![image](//upload-images.jianshu.io/upload_images/1070332-0acb2b8686cfc827.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/899)
+![image](https://upload-images.jianshu.io/upload_images/1070332-0acb2b8686cfc827.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/899)
 
 ## 4.配置App名称，Bundle ID 和 证书
 
@@ -40,13 +40,13 @@
 
 在Project->Build Settings 点击加号选择Add User-Defined Setting]，即增加用户自定义设置，添加一个App名称的设置，为不同的Configuration设置不同的App名字。
 
-![image](//upload-images.jianshu.io/upload_images/1070332-d87c612021db4b2f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/747)
+![image](https://upload-images.jianshu.io/upload_images/1070332-d87c612021db4b2f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/747)
 
-![image](//upload-images.jianshu.io/upload_images/1070332-54bacd3a61fbc220.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/520)
+![image](https://upload-images.jianshu.io/upload_images/1070332-54bacd3a61fbc220.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/520)
 
 然后在info.plist中设置Bundle display name为我们自定义的设置，${CusomAppName}。
 
-![image](//upload-images.jianshu.io/upload_images/1070332-ef6c9d606cfcf074.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/819)
+![image](https://upload-images.jianshu.io/upload_images/1070332-ef6c9d606cfcf074.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/819)
 
 ### 4.2 配置Bundle ID和证书
 
@@ -54,17 +54,17 @@
 
 bundle id 在Targets->Build Settings 中的Product Bundle Identifier设置。
 
-![image](//upload-images.jianshu.io/upload_images/1070332-113ba92ea46a5b1f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/889)
+![image](https://upload-images.jianshu.io/upload_images/1070332-113ba92ea46a5b1f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/889)
 
 证书配置如下图
 
-![image](//upload-images.jianshu.io/upload_images/1070332-6effb0a3fd10c598.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/821)
+![image](https://upload-images.jianshu.io/upload_images/1070332-6effb0a3fd10c598.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/821)
 
 ## 5.其他配置
 
 在Targets->Build Settings->Preprocessor Macros中，可以根据Configuration配置不同的预编译宏，根据这个预编译宏的不同，在代码里面也可以有不同的配置，比如渠道号，接口域名等。
 
-![image](//upload-images.jianshu.io/upload_images/1070332-580ffcd17ea9981f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/889)
+![image](https://upload-images.jianshu.io/upload_images/1070332-580ffcd17ea9981f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/889)
 
 ```
 #ifdef MaJiaA
@@ -79,7 +79,7 @@ NSString *kServiceDomain = @"http://api.release";
 
 ```
 
-![image](//upload-images.jianshu.io/upload_images/1070332-30ea1e00d0221d28.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/365)
+![image](https://upload-images.jianshu.io/upload_images/1070332-30ea1e00d0221d28.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/365)
 
 ## 6.总结
 
