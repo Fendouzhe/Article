@@ -6,7 +6,7 @@
 
 探寻OC对象的本质，我们平时编写的Objective-C代码，底层实现其实都是C\C++代码。
 
-![image](//upload-images.jianshu.io/upload_images/1434508-7c3e4ae59cb80fc6.png?imageMogr2/auto-orient/strip|imageView2/2/w/1196)
+![image](https://upload-images.jianshu.io/upload_images/1434508-7c3e4ae59cb80fc6.png?imageMogr2/auto-orient/strip|imageView2/2/w/1196)
 
 OC的对象结构都是通过基础C\C++的结构体实现的。
 我们通过创建OC文件及对象，并将OC文件转化为C++文件来探寻OC对象的本质
@@ -155,7 +155,7 @@ stu -> _age = 5;
 
 那么上述代码实际上在内存中的体现为，创建Student对象首先会分配16个字节，存储3个东西，isa指针8个字节，4个字节的_no ,4个字节的_age
 
-![image](//upload-images.jianshu.io/upload_images/1434508-8e7c35bb6b3d6d52.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200)
+![image](https://upload-images.jianshu.io/upload_images/1434508-8e7c35bb6b3d6d52.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200)
 
 sutdent对象的3个变量分别有自己的地址。而stu指向isa指针的地址。因此stu的地址为0x100400110，stu对象在内存中占用16个字节的空间。并且经过赋值，_no里面存储4 ，_age里面存储5
 
@@ -207,7 +207,7 @@ NSLog(@"%zd,%zd", class_getInstanceSize([NSObject class]) ,class_getInstanceSize
 **方式一：通过打断点。**
 Debug Workflow -> viewMemory address中输入stu的地址
 
-![image](//upload-images.jianshu.io/upload_images/1434508-1c2f8f333637cb41.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200)
+![image](https://upload-images.jianshu.io/upload_images/1434508-1c2f8f333637cb41.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200)
 
 从上图中，我们可以发现读取数据从高位数据开始读，查看前16位字节，每四个字节读出的数据为
 16进制 0x0000004(4字节) 0x0000005(4字节) isa的地址为 00D1081000001119(8字节)
@@ -236,7 +236,7 @@ memory write 0x100400c68 6
 
 ```
 
-![image](//upload-images.jianshu.io/upload_images/1434508-0f4104937adf7401.png?imageMogr2/auto-orient/strip|imageView2/2/w/724)
+![image](https://upload-images.jianshu.io/upload_images/1434508-0f4104937adf7401.png?imageMogr2/auto-orient/strip|imageView2/2/w/724)
 
 > 那么一个NSObject对象占用多少内存？
 > **NSObjcet实际上是只有一个名为isa的指针的结构体，因此占用一个指针变量所占用的内存空间大小，如果64bit占用8个字节，如果32bit占用4个字节。**
@@ -283,7 +283,7 @@ int main(int argc, const char * argv[]) {
 
 我们依据上面的分析与发现，类对象实质上是以结构体的形式存储在内存中，画出真正的内存图例
 
-![image](//upload-images.jianshu.io/upload_images/1434508-dded6a79a629de09.png?imageMogr2/auto-orient/strip|imageView2/2/w/1056)
+![image](https://upload-images.jianshu.io/upload_images/1434508-dded6a79a629de09.png?imageMogr2/auto-orient/strip|imageView2/2/w/1056)
 
 **我们发现只要是继承自NSObject的对象，那么底层结构体内一定有一个isa指针。**
 那么他们所占的内存空间是多少呢？单纯的将指针和成员变量所占的内存相加即可吗？上述代码实际打印的内容是16 16，也就是说，person对象和student对象所占用的内存空间都为16个字节。
@@ -384,7 +384,7 @@ instance对象在内存中存储的信息包括
 1.  isa指针
 2.  其他成员变量
 
-![image](//upload-images.jianshu.io/upload_images/1434508-c564b99ce9ba8c10.png?imageMogr2/auto-orient/strip|imageView2/2/w/1083)
+![image](https://upload-images.jianshu.io/upload_images/1434508-c564b99ce9ba8c10.png?imageMogr2/auto-orient/strip|imageView2/2/w/1083)
 
 > 衍生问题：在上图实例对象中根本没有看到方法，那么实例对象的方法的代码放在什么地方呢？那么类的方法的信息，协议的信息，属性的信息都存放在什么地方呢？
 
@@ -412,7 +412,7 @@ class对象在内存中存储的信息主要包括
 3.  类的属性信息（@property），类的成员变量信息（ivar）
 4.  类的对象方法信息（instance method），类的协议信息（protocol）
 
-![image](//upload-images.jianshu.io/upload_images/1434508-c3527113c4cc1c08.png?imageMogr2/auto-orient/strip|imageView2/2/w/316)
+![image](https://upload-images.jianshu.io/upload_images/1434508-c3527113c4cc1c08.png?imageMogr2/auto-orient/strip|imageView2/2/w/316)
 
 **成员变量的值时存储在实例对象中的，因为只有当我们创建实例对象的时候才为成员变赋值。但是成员变量叫什么名字，是什么类型，只需要有一份就可以了。所以存储在class对象中。**
 
@@ -437,7 +437,7 @@ meta-class对象和class对象的内存结构是一样的，但是用途不一�
 2.  superclass指针
 3.  类的类方法的信息（class method）
 
-![image](//upload-images.jianshu.io/upload_images/1434508-4aca671a18181443.png?imageMogr2/auto-orient/strip|imageView2/2/w/328)
+![image](https://upload-images.jianshu.io/upload_images/1434508-4aca671a18181443.png?imageMogr2/auto-orient/strip|imageView2/2/w/328)
 
 **meta-class对象和class对象的内存结构是一样的，所以meta-class中也有类的属性信息，类的对象方法信息等成员变量，但是其中的值可能是空的。**
 
@@ -462,7 +462,7 @@ meta-class对象和class对象的内存结构是一样的，但是用途不一�
 **class的isa指向meta-class
 当调用类方法时，通过class的isa找到meta-class，最后找到类方法的实现进行调用**
 
-![image](//upload-images.jianshu.io/upload_images/1434508-e71cf3850379fe21.png?imageMogr2/auto-orient/strip|imageView2/2/w/1145)
+![image](https://upload-images.jianshu.io/upload_images/1434508-e71cf3850379fe21.png?imageMogr2/auto-orient/strip|imageView2/2/w/1145)
 
 3.  当对象调用其父类对象方法的时候，又是怎么找到父类对象方法的呢？，此时就需要使用到class类对象superclass指针。
 
@@ -474,7 +474,7 @@ meta-class对象和class对象的内存结构是一样的，但是用途不一�
 
 **当Student的instance对象要调用Person的对象方法时，会先通过isa找到Student的class，然后通过superclass找到Person的class，最后找到对象方法的实现进行调用，同样如果Person发现自己没有响应的对象方法，又会通过Person的superclass指针找到NSObject的class对象，去寻找响应的方法**
 
-![image](//upload-images.jianshu.io/upload_images/1434508-c424291af118ebad.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200)
+![image](https://upload-images.jianshu.io/upload_images/1434508-c424291af118ebad.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200)
 
 4.  当类对象调用父类的类方法时，就需要先通过isa指针找到meta-class，然后通过superclass去寻找响应的方法
 
@@ -488,7 +488,7 @@ meta-class对象和class对象的内存结构是一样的，但是用途不一�
 
 最后又是这张静定的isa指向图，经过上面的分析我们在来看这张图，就显得清晰明了很多。
 
-![image](//upload-images.jianshu.io/upload_images/1434508-49ba7d6446b3ded2.png?imageMogr2/auto-orient/strip|imageView2/2/w/449)
+![image](https://upload-images.jianshu.io/upload_images/1434508-49ba7d6446b3ded2.png?imageMogr2/auto-orient/strip|imageView2/2/w/449)
 
 > **对isa、superclass总结**
 > 
@@ -515,22 +515,22 @@ NSLog(@"%p %p %p", object, objectClass, objectMetaClass);
 
 打断点并通过控制台打印相应对象的isa指针
 
-![image](//upload-images.jianshu.io/upload_images/1434508-00e99ea5045212df.png?imageMogr2/auto-orient/strip|imageView2/2/w/407)
+![image](https://upload-images.jianshu.io/upload_images/1434508-00e99ea5045212df.png?imageMogr2/auto-orient/strip|imageView2/2/w/407)
 
 我们发现object->isa与objectClass的地址不同，这是因为从64bit开始，isa需要进行一次位运算，才能计算出真实地址。而位运算的值我们可以通过下载[objc源代码](https://links.jianshu.com/go?to=https%3A%2F%2Fopensource.apple.com%2Ftarballs%2Fobjc4%2F)找到。
 
-![image](//upload-images.jianshu.io/upload_images/1434508-276d3011130264db.png?imageMogr2/auto-orient/strip|imageView2/2/w/453)
+![image](https://upload-images.jianshu.io/upload_images/1434508-276d3011130264db.png?imageMogr2/auto-orient/strip|imageView2/2/w/453)
 
 我们通过位运算进行验证。
 
-![image](//upload-images.jianshu.io/upload_images/1434508-f2268e81904fb832.png?imageMogr2/auto-orient/strip|imageView2/2/w/470)
+![image](https://upload-images.jianshu.io/upload_images/1434508-f2268e81904fb832.png?imageMogr2/auto-orient/strip|imageView2/2/w/470)
 
 我们发现，object-isa指针地址0x001dffff96537141经过同0x00007ffffffffff8位运算，得出objectClass的地址0x00007fff96537140
 
 接着我们来验证class对象的isa指针是否同样需要位运算计算出meta-class对象的地址。
 当我们以同样的方式打印objectClass->isa指针时，发现无法打印
 
-![image](//upload-images.jianshu.io/upload_images/1434508-38ec0ad027ade31e.png?imageMogr2/auto-orient/strip|imageView2/2/w/1046)
+![image](https://upload-images.jianshu.io/upload_images/1434508-38ec0ad027ade31e.png?imageMogr2/auto-orient/strip|imageView2/2/w/1046)
 
 同时也发现左边objectClass对象中并没有isa指针。我们来到Class内部看一下
 
@@ -571,7 +571,7 @@ struct xx_cc_objc_class *objectClass2 = (__bridge struct xx_cc_objc_class *)(obj
 
 此时我们重新验证一下
 
-![image](//upload-images.jianshu.io/upload_images/1434508-878ba6c819b229a7.png?imageMogr2/auto-orient/strip|imageView2/2/w/499)
+![image](https://upload-images.jianshu.io/upload_images/1434508-878ba6c819b229a7.png?imageMogr2/auto-orient/strip|imageView2/2/w/499)
 
 确实，objectClass2的isa指针经过位运算之后的地址是meta-class的地址。
 

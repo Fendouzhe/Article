@@ -51,14 +51,14 @@
 
 首先我们对上述代码中添加监听的地方打断点，看观察一下，addObserver方法对p1对象做了什么处理？也就是说p1对象在经过addObserver方法之后发生了什么改变，我们通过打印isa指针如下图所示
 
-![image](//upload-images.jianshu.io/upload_images/1434508-a57c2214cbab5c3d.png?imageMogr2/auto-orient/strip|imageView2/2/w/677)
+![image](https://upload-images.jianshu.io/upload_images/1434508-a57c2214cbab5c3d.png?imageMogr2/auto-orient/strip|imageView2/2/w/677)
 
 通过上图我们发现，p1对象执行过addObserver操作之后，p1对象的isa指针由之前的指向类对象Person变为指向NSKVONotifyin_Person类对象，而p2对象没有任何改变。也就是说一旦p1对象添加了KVO监听以后，其isa指针就会发生变化，因此set方法的执行效果就不一样了。
 
 那么我们先来观察p2对象在内容中是如何存储的，然后对比p2来观察p1。
 首先我们知道，p2在调用setage方法的时候，首先会通过p2对象中的isa指针找到Person类对象，然后在类对象中找到setage方法。然后找到方法对应的实现。如下图所示
 
-![image](//upload-images.jianshu.io/upload_images/1434508-af5d48461719e8b4.png?imageMogr2/auto-orient/strip|imageView2/2/w/926)
+![image](https://upload-images.jianshu.io/upload_images/1434508-af5d48461719e8b4.png?imageMogr2/auto-orient/strip|imageView2/2/w/926)
 
 但是刚才我们发现p1对象的isa指针在经过KVO监听之后已经指向了NSKVONotifyin_Person类对象，NSKVONotifyin_Person其实是Person的子类，那么也就是说其superclass指针是指向Person类对象的，NSKVONotifyin_Person是runtime在运行时生成的。那么p1对象在调用setage方法的时候，肯定会根据p1的isa找到NSKVONotifyin_Person，在NSKVONotifyin_Person中找setage的方法及实现。
 
@@ -81,20 +81,20 @@ NSLog(@"添加KVO监听之后 - p1 = %p, p2 = %p", [p1 methodForSelector: @selec
 
 ```
 
-![image](//upload-images.jianshu.io/upload_images/1434508-d1aede90d0e1a9dd.png?imageMogr2/auto-orient/strip|imageView2/2/w/959)
+![image](https://upload-images.jianshu.io/upload_images/1434508-d1aede90d0e1a9dd.png?imageMogr2/auto-orient/strip|imageView2/2/w/959)
 
 我们发现在添加KVO监听之前，p1和p2的setAge方法实现的地址相同，而经过KVO监听之后，p1的setAge方法实现的地址发生了变化，我们通过打印方法实现来看一下前后的变化发现，确实如我们上面所讲的一样，p1的setAge方法的实现由Person类方法中的setAge方法转换为了C语言的Foundation框架的_NSsetIntValueAndNotify函数。
 
 Foundation框架中会根据属性的类型，调用不同的方法。例如我们之前定义的int类型的age属性，那么我们看到Foundation框架中调用的_NSset**Int**ValueAndNotify函数。那么我们把age的属性类型变为**double**重新打印一遍
 
-![image](//upload-images.jianshu.io/upload_images/1434508-3d68a6dc9b738861.png?imageMogr2/auto-orient/strip|imageView2/2/w/888)
+![image](https://upload-images.jianshu.io/upload_images/1434508-3d68a6dc9b738861.png?imageMogr2/auto-orient/strip|imageView2/2/w/888)
 
 我们发现调用的函数变为了_NSSet**Double**ValueAndNotify，那么这说明Foundation框架中有许多此类型的函数，通过属性的不同类型调用不同的函数。
 那么我们可以推测Foundation框架中还有很多例如`_NSSetBoolValueAndNotify、_NSSetCharValueAndNotify、_NSSetFloatValueAndNotify、_NSSetLongValueAndNotify`等等函数。
 
 我们可以找到Foundation框架文件，通过命令行查询关键字找到相关函数
 
-![image](//upload-images.jianshu.io/upload_images/1434508-be89e706d117e432.png?imageMogr2/auto-orient/strip|imageView2/2/w/500)
+![image](https://upload-images.jianshu.io/upload_images/1434508-be89e706d117e432.png?imageMogr2/auto-orient/strip|imageView2/2/w/500)
 
 ### NSKVONotifyin_Person内部结构是怎样的？
 
@@ -143,11 +143,11 @@ Foundation框架中会根据属性的类型，调用不同的方法。例如我�
 
 上述打印内容如下
 
-![image](//upload-images.jianshu.io/upload_images/1434508-e3288e87baa7e778.png?imageMogr2/auto-orient/strip|imageView2/2/w/657)
+![image](https://upload-images.jianshu.io/upload_images/1434508-e3288e87baa7e778.png?imageMogr2/auto-orient/strip|imageView2/2/w/657)
 
 通过上述代码我们发现NSKVONotifyin_Person中有4个对象方法。分别为setAge: class dealloc _isKVOA，那么至此我们可以画出NSKVONotifyin_Person的内存结构以及方法调用顺序。
 
-![image](//upload-images.jianshu.io/upload_images/1434508-40e66a75b2c8cc8a.png?imageMogr2/auto-orient/strip|imageView2/2/w/1024)
+![image](https://upload-images.jianshu.io/upload_images/1434508-40e66a75b2c8cc8a.png?imageMogr2/auto-orient/strip|imageView2/2/w/1024)
 
 这里NSKVONotifyin_Person重写class方法是为了隐藏NSKVONotifyin_Person。不被外界所看到。我们在p1添加过KVO监听之后，分别打印p1和p2对象的class可以发现他们都返回Person。
 
@@ -196,7 +196,7 @@ NSLog(@"%@,%@",[p1 class],[p2 class]);
 
 再次运行来查看didChangeValueForKey的方法内运行过程，通过打印内容可以看到，确实在didChangeValueForKey方法内部已经调用了observer的observeValueForKeyPath:ofObject:change:context:方法。
 
-![image](//upload-images.jianshu.io/upload_images/1434508-a5ff2763180882dd.png?imageMogr2/auto-orient/strip|imageView2/2/w/846)
+![image](https://upload-images.jianshu.io/upload_images/1434508-a5ff2763180882dd.png?imageMogr2/auto-orient/strip|imageView2/2/w/846)
 
 ### 回答问题：
 
@@ -222,7 +222,7 @@ NSKeyValueObservingOptions options = NSKeyValueObservingOptionNew | NSKeyValueOb
 
 ```
 
-![image](//upload-images.jianshu.io/upload_images/1434508-4448737a00ae281c.png?imageMogr2/auto-orient/strip|imageView2/2/w/818)
+![image](https://upload-images.jianshu.io/upload_images/1434508-4448737a00ae281c.png?imageMogr2/auto-orient/strip|imageView2/2/w/818)
 
 通过打印我们可以发现，didChangeValueForKey方法内部成功调用了observeValueForKeyPath:ofObject:change:context:，并且age的值并没有发生改变。
 

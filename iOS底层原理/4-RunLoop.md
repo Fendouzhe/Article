@@ -20,7 +20,7 @@
 3.  **节省CPU资源，提高程序性能**，程序运行起来时，当什么操作都没有做的时候，RunLoop就告诉CUP，现在没有事情做，我要去休息，这时CUP就会将其资源释放出来去做其他的事情，当有事情做的时候RunLoop就会立马起来去做事情
     **我们先通过API内一张图片来简单看一下RunLoop内部运行原理**
 
-    ![image](//upload-images.jianshu.io/upload_images/1434508-467259882fa87be8?imageMogr2/auto-orient/strip|imageView2/2/w/495)
+    ![image](https://upload-images.jianshu.io/upload_images/1434508-467259882fa87be8?imageMogr2/auto-orient/strip|imageView2/2/w/495)
 
     通过图片可以看出，RunLoop在跑圈过程中，当接收到Input sources 或者 Timer sources时就会交给对应的处理方去处理。当没有事件消息传入的时候，RunLoop就休息了。这里只是简单的理解一下这张图，接下来我们来了解RunLoop对象和其一些相关类，来更深入的理解RunLoop运行流程。
 
@@ -271,7 +271,7 @@ CFMutableArrayRef _timers;
 
 打断点之后打印堆栈信息，当xcode工具区打印的堆栈信息不全时，可以在控制台通过“bt”指令打印完整的堆栈信息，由堆栈信息中可以发现，触摸事件确实是会触发Source0事件。
 
-![image](//upload-images.jianshu.io/upload_images/1434508-480aef516a657366?imageMogr2/auto-orient/strip|imageView2/2/w/950)
+![image](https://upload-images.jianshu.io/upload_images/1434508-480aef516a657366?imageMogr2/auto-orient/strip|imageView2/2/w/950)
 
 同样的方式验证performSelector堆栈信息
 
@@ -284,7 +284,7 @@ dispatch_async(dispatch_get_global_queue(0, 0), ^{
 
 可以发现PerformSelectors同样是触发Source0事件
 
-![image](//upload-images.jianshu.io/upload_images/1434508-eb8749c37408052a?imageMogr2/auto-orient/strip|imageView2/2/w/1090)
+![image](https://upload-images.jianshu.io/upload_images/1434508-eb8749c37408052a?imageMogr2/auto-orient/strip|imageView2/2/w/1090)
 
 **3\. Timers : 定时器，NSTimer**
 
@@ -299,7 +299,7 @@ dispatch_async(dispatch_get_global_queue(0, 0), ^{
 
 打印完整堆栈信息
 
-![image](//upload-images.jianshu.io/upload_images/1434508-50ccd8ebc5645eea?imageMogr2/auto-orient/strip|imageView2/2/w/1102)
+![image](https://upload-images.jianshu.io/upload_images/1434508-50ccd8ebc5645eea?imageMogr2/auto-orient/strip|imageView2/2/w/1102)
 
 **4\. Observer : 监听器，用于监听RunLoop的状态**
 
@@ -325,7 +325,7 @@ dispatch_async(dispatch_get_global_queue(0, 0), ^{
 如果需要切换Mode，只能退出RunLoop，再重新指定一个Mode进入，这样做主要是为了分隔开不同组的Source、Timer、Observer，让其互不影响。如果Mode里没有任何Source0/Source1/Timer/Observer，RunLoop会立马退出**
 如图所示：
 
-![image](//upload-images.jianshu.io/upload_images/1434508-0a1357ff5348e174?imageMogr2/auto-orient/strip|imageView2/2/w/364)
+![image](https://upload-images.jianshu.io/upload_images/1434508-0a1357ff5348e174?imageMogr2/auto-orient/strip|imageView2/2/w/364)
 
 **注意：一种Mode中可以有多个Source(事件源，输入源，基于端口事件源例键盘触摸等) Observer(观察者，观察当前RunLoop运行状态) 和Timer(定时器事件源)。但是必须至少有一个Source或者Timer，因为如果Mode为空，RunLoop运行到空模式不会进行空转，就会立刻退出。**
 
@@ -513,7 +513,7 @@ RunLoop 有五种运行模式，其中常见的有1.2两种
 
 我们来看一下输出
 
-![image](//upload-images.jianshu.io/upload_images/1434508-793c1d4ef37d17f1?imageMogr2/auto-orient/strip|imageView2/2/w/439)
+![image](https://upload-images.jianshu.io/upload_images/1434508-793c1d4ef37d17f1?imageMogr2/auto-orient/strip|imageView2/2/w/439)
 
 以上可以看出，Observer确实用来监听RunLoop的状态，包括唤醒，休息，以及处理各种事件。
 
@@ -521,7 +521,7 @@ RunLoop 有五种运行模式，其中常见的有1.2两种
 
 这时我们再来分析RunLoop的处理逻辑，就会简单明了很多，现在回头看官方文档RunLoop的处理逻辑，对RunLoop的处理逻辑有新的认识。
 
-![image](//upload-images.jianshu.io/upload_images/1434508-68fda83446f06e51?imageMogr2/auto-orient/strip|imageView2/2/w/495)
+![image](https://upload-images.jianshu.io/upload_images/1434508-68fda83446f06e51?imageMogr2/auto-orient/strip|imageView2/2/w/495)
 
 ### 源码解析
 
@@ -649,7 +649,7 @@ static int32_t __CFRunLoopRun(CFRunLoopRef rl, CFRunLoopModeRef rlm, CFTimeInter
 
 此时我们按照源码重新整理一下RunLoop处理逻辑就会很清晰
 
-![image](//upload-images.jianshu.io/upload_images/1434508-d448ec1fc5171e09?imageMogr2/auto-orient/strip|imageView2/2/w/747)
+![image](https://upload-images.jianshu.io/upload_images/1434508-d448ec1fc5171e09?imageMogr2/auto-orient/strip|imageView2/2/w/747)
 
 ## 九. RunLoop退出
 

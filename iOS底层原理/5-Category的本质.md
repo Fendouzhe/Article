@@ -121,37 +121,37 @@ xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc Preson+Test.m
 
 在分类转化为c++文件中可以看出_category_t结构体中，存放着类名，对象方法列表，类方法列表，协议列表，以及属性列表。
 
-![image](//upload-images.jianshu.io/upload_images/1434508-78990f54c5edb32e.png?imageMogr2/auto-orient/strip|imageView2/2/w/820)
+![image](https://upload-images.jianshu.io/upload_images/1434508-78990f54c5edb32e.png?imageMogr2/auto-orient/strip|imageView2/2/w/820)
 
 紧接着，我们可以看到_method_list_t类型的结构体，如下图所示
 
-![image](//upload-images.jianshu.io/upload_images/1434508-7fecec0e35cbfe3e.png?imageMogr2/auto-orient/strip|imageView2/2/w/1179)
+![image](https://upload-images.jianshu.io/upload_images/1434508-7fecec0e35cbfe3e.png?imageMogr2/auto-orient/strip|imageView2/2/w/1179)
 
 上图中我们发现这个结构体**`_OBJC_$_CATEGORY_INSTANCE_METHODS_Preson_$_Test`**从名称可以看出是INSTANCE_METHODS对象方法，并且一一对应为上面结构体内赋值。我们可以看到结构体中存储了方法占用的内存，方法数量，以及方法列表。并且从上图中找到分类中我们实现对应的对象方法，test , setAge, age三个方法
 
 接下来我们发现同样的_method_list_t类型的类方法结构体，如下图所示
 
-![image](//upload-images.jianshu.io/upload_images/1434508-e81b6858a16dc4cb.png?imageMogr2/auto-orient/strip|imageView2/2/w/1135)
+![image](https://upload-images.jianshu.io/upload_images/1434508-e81b6858a16dc4cb.png?imageMogr2/auto-orient/strip|imageView2/2/w/1135)
 
 同上面对象方法列表一样，这个我们可以看出是类方法列表结构体 `_OBJC_$_CATEGORY_CLASS_METHODS_Preson_$_Test`，同对象方法结构体相同，同样可以看到我们实现的类方法，abc。
 
 接下来是协议方法列表
 
-![image](//upload-images.jianshu.io/upload_images/1434508-19ef40f48eeebfd3.png?imageMogr2/auto-orient/strip|imageView2/2/w/1189)
+![image](https://upload-images.jianshu.io/upload_images/1434508-19ef40f48eeebfd3.png?imageMogr2/auto-orient/strip|imageView2/2/w/1189)
 
 通过上述源码可以看到先将协议方法通过_method_list_t结构体存储，之后通过_protocol_t结构体存储在**`_OBJC_CATEGORY_PROTOCOLS_$_Preson_$_Test`**中同_protocol_list_t结构体一一对应，分别为protocol_count 协议数量以及存储了协议方法的_protocol_t结构体。
 
 最后我们可以看到属性列表
 
-![image](//upload-images.jianshu.io/upload_images/1434508-e5878cf5fc015c7c.png?imageMogr2/auto-orient/strip|imageView2/2/w/962)
+![image](https://upload-images.jianshu.io/upload_images/1434508-e5878cf5fc015c7c.png?imageMogr2/auto-orient/strip|imageView2/2/w/962)
 
 属性列表结构体**`_OBJC_$_PROP_LIST_Preson_$_Test`**同_prop_list_t结构体对应，存储属性的占用空间，属性属性数量，以及属性列表，从上图中可以看到我们自己写的age属性。
 
 最后我们可以看到定义了**`_OBJC_$_CATEGORY_Preson_$_Test`**结构体，并且将我们上面着重分析的结构体一一赋值，我们通过两张图片对照一下。
 
-![image](//upload-images.jianshu.io/upload_images/1434508-ed3e04186e33e0d2.png?imageMogr2/auto-orient/strip|imageView2/2/w/689)
+![image](https://upload-images.jianshu.io/upload_images/1434508-ed3e04186e33e0d2.png?imageMogr2/auto-orient/strip|imageView2/2/w/689)
 
-![image](//upload-images.jianshu.io/upload_images/1434508-a2dffad1c81f5d72.png?imageMogr2/auto-orient/strip|imageView2/2/w/1194)
+![image](https://upload-images.jianshu.io/upload_images/1434508-a2dffad1c81f5d72.png?imageMogr2/auto-orient/strip|imageView2/2/w/1194)
 
 上下两张图一一对应，并且我们看到定义`_class_t`类型的`OBJC_CLASS_$_Preson`结构体，最后将`_OBJC_$_CATEGORY_Preson_$_Test`的`cls`指针指向`OBJC_CLASS_$_Preson`结构体地址。我们这里可以看出，`cls`指针指向的应该是分类的主类类对象的地址。
 
@@ -159,21 +159,21 @@ xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc Preson+Test.m
 
 首先来到runtime初始化函数
 
-![image](//upload-images.jianshu.io/upload_images/1434508-0b43b0c4f1a2f9e1.png?imageMogr2/auto-orient/strip|imageView2/2/w/812)
+![image](https://upload-images.jianshu.io/upload_images/1434508-0b43b0c4f1a2f9e1.png?imageMogr2/auto-orient/strip|imageView2/2/w/812)
 
 接着我们来到 &map_images读取模块（images这里代表模块），来到map_images_nolock函数中找到_read_images函数，在_read_images函数中我们找到分类相关代码
 
-![image](//upload-images.jianshu.io/upload_images/1434508-89ef8494e5741ac2.png?imageMogr2/auto-orient/strip|imageView2/2/w/866)
+![image](https://upload-images.jianshu.io/upload_images/1434508-89ef8494e5741ac2.png?imageMogr2/auto-orient/strip|imageView2/2/w/866)
 
 从上述代码中我们可以知道这段代码是用来查找有没有分类的。通过_getObjc2CategoryList函数获取到分类列表之后，进行遍历，获取其中的方法，协议，属性等。可以看到最终都调用了remethodizeClass(cls);函数。我们来到remethodizeClass(cls);函数内部查看。
 
-![image](//upload-images.jianshu.io/upload_images/1434508-81023f6e55b830af.png?imageMogr2/auto-orient/strip|imageView2/2/w/852)
+![image](https://upload-images.jianshu.io/upload_images/1434508-81023f6e55b830af.png?imageMogr2/auto-orient/strip|imageView2/2/w/852)
 
 通过上述代码我们发现attachCategories函数接收了类对象cls和分类数组cats，如我们一开始写的代码所示，一个类可以有多个分类。之前我们说到分类信息存储在category_t结构体中，那么多个分类则保存在category_list中。
 
 我们来到attachCategories函数内部。
 
-![image](//upload-images.jianshu.io/upload_images/1434508-0c16f9a121a704c3.png?imageMogr2/auto-orient/strip|imageView2/2/w/942)
+![image](https://upload-images.jianshu.io/upload_images/1434508-0c16f9a121a704c3.png?imageMogr2/auto-orient/strip|imageView2/2/w/942)
 
 上述源码中可以看出，首先根据方法列表，属性列表，协议列表，malloc分配内存，根据多少个分类以及每一块方法需要多少内存来分配相应的内存地址。之后从分类数组里面往三个数组里面存放分类数组里面存放的分类方法，属性以及协议放入对应mlist、proplists、protolosts数组中，这三个数组放着所有分类的方法，属性和协议。
 之后通过类对象的data()方法，拿到类对象的class_rw_t结构体rw，在class结构中我们介绍过，class_rw_t中存放着类对象的方法，属性和协议等数据，rw结构体通过类对象的data方法获取，所以rw里面存放这类对象里面的数据。
@@ -181,7 +181,7 @@ xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc Preson+Test.m
 
 我们来看一下attachLists函数内部。
 
-![image](//upload-images.jianshu.io/upload_images/1434508-5b7b751278a9de70.png?imageMogr2/auto-orient/strip|imageView2/2/w/1009)
+![image](https://upload-images.jianshu.io/upload_images/1434508-5b7b751278a9de70.png?imageMogr2/auto-orient/strip|imageView2/2/w/1009)
 
 **上述源代码中有两个重要的数组**
 **array()->lists： 类对象原来的方法列表，属性列表，协议列表。**
@@ -210,7 +210,7 @@ void    *memcpy(void *__dst, const void *__src, size_t __n);
 
 下面我们图示经过memmove和memcpy方法过后的内存变化。
 
-![image](//upload-images.jianshu.io/upload_images/1434508-de4cc8308b362d72.png?imageMogr2/auto-orient/strip|imageView2/2/w/743)
+![image](https://upload-images.jianshu.io/upload_images/1434508-de4cc8308b362d72.png?imageMogr2/auto-orient/strip|imageView2/2/w/743)
 
 经过memmove方法之后，内存变化为
 
@@ -223,7 +223,7 @@ memmove(array()->lists + addedCount, array()->lists,
 
 ```
 
-![image](//upload-images.jianshu.io/upload_images/1434508-d57c524988754a9c.png?imageMogr2/auto-orient/strip|imageView2/2/w/917)
+![image](https://upload-images.jianshu.io/upload_images/1434508-d57c524988754a9c.png?imageMogr2/auto-orient/strip|imageView2/2/w/917)
 
 经过memmove方法之后，我们发现，虽然本类的方法，属性，协议列表会分别后移，但是本类的对应数组的指针依然指向原始位置。
 
@@ -238,7 +238,7 @@ memcpy(array()->lists, addedLists,
 
 ```
 
-![image](//upload-images.jianshu.io/upload_images/1434508-2f70771f3deffad7.png?imageMogr2/auto-orient/strip|imageView2/2/w/916)
+![image](https://upload-images.jianshu.io/upload_images/1434508-2f70771f3deffad7.png?imageMogr2/auto-orient/strip|imageView2/2/w/916)
 
 我们发现原来指针并没有改变，至始至终指向开头的位置。并且经过memmove和memcpy方法之后，分类的方法，属性，协议列表被放在了类对象中原本存储的方法，属性，协议列表前面。
 
@@ -279,7 +279,7 @@ memcpy(array()->lists, addedLists,
 
 通过下图中打印内容可以发现，调用的是Test2中的run方法，并且Person类中存储着两个run方法。
 
-![image](//upload-images.jianshu.io/upload_images/1434508-e918e62841729d82.png?imageMogr2/auto-orient/strip|imageView2/2/w/919)
+![image](https://upload-images.jianshu.io/upload_images/1434508-e918e62841729d82.png?imageMogr2/auto-orient/strip|imageView2/2/w/919)
 
 #### 总结：
 
@@ -293,31 +293,31 @@ Category可以添加属性，但是并不会自动生成成员变量及set/get�
 load方法会在程序启动就会调用，当装载类信息的时候就会调用。
 调用顺序看一下源代码。
 
-![image](//upload-images.jianshu.io/upload_images/1434508-708c460c656a6f6c.png?imageMogr2/auto-orient/strip|imageView2/2/w/819)
+![image](https://upload-images.jianshu.io/upload_images/1434508-708c460c656a6f6c.png?imageMogr2/auto-orient/strip|imageView2/2/w/819)
 
 通过源码我们发现是优先调用类的load方法，之后调用分类的load方法。
 
 我们通过代码验证一下：
 我们添加Student继承Presen类，并添加Student+Test分类，分别重写只+load方法，其他什么都不做通过打印发现
 
-![image](//upload-images.jianshu.io/upload_images/1434508-1d4aee32a833695e.png?imageMogr2/auto-orient/strip|imageView2/2/w/794)
+![image](https://upload-images.jianshu.io/upload_images/1434508-1d4aee32a833695e.png?imageMogr2/auto-orient/strip|imageView2/2/w/794)
 
 确实是优先调用类的load方法之后调用分类的load方法，不过调用类的load方法之前会保证其父类已经调用过load方法。
 
 之后我们为Preson、Student 、Student+Test 添加initialize方法。
 我们知道当类第一次接收到消息时，就会调用initialize，相当于第一次使用类的时候就会调用initialize方法。调用子类的initialize之前，会先保证调用父类的initialize方法。如果之前已经调用过initialize，就不会再调用initialize方法了。当分类重写initialize方法时会先调用分类的方法。但是load方法并不会被覆盖，首先我们来看一下initialize的源码。
 
-![image](//upload-images.jianshu.io/upload_images/1434508-ec80b8d39337c614.png?imageMogr2/auto-orient/strip|imageView2/2/w/669)
+![image](https://upload-images.jianshu.io/upload_images/1434508-ec80b8d39337c614.png?imageMogr2/auto-orient/strip|imageView2/2/w/669)
 
 上图中我们发现，initialize是通过消息发送机制调用的，消息发送机制通过isa指针找到对应的方法与实现，因此先找到分类方法中的实现，会优先调用分类方法中的实现。
 
 我们再来看一下load方法的调用源码
 
-![image](//upload-images.jianshu.io/upload_images/1434508-6e323496c3792af8.png?imageMogr2/auto-orient/strip|imageView2/2/w/768)
+![image](https://upload-images.jianshu.io/upload_images/1434508-6e323496c3792af8.png?imageMogr2/auto-orient/strip|imageView2/2/w/768)
 
 我们看到load方法中直接拿到load方法的内存地址直接调用方法，不在是通过消息发送机制调用。
 
-![image](//upload-images.jianshu.io/upload_images/1434508-ad02c1839e1ec5e1.png?imageMogr2/auto-orient/strip|imageView2/2/w/711)
+![image](https://upload-images.jianshu.io/upload_images/1434508-ad02c1839e1ec5e1.png?imageMogr2/auto-orient/strip|imageView2/2/w/711)
 
 我们可以看到分类中也是通过直接拿到load方法的地址进行调用。因此正如我们之前试验的一样，分类中重写load方法，并不会优先调用分类的load方法，而不调用本类中的load方法了。
 
