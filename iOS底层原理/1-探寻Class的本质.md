@@ -321,19 +321,17 @@ int main(int argc, const char * argv[]) {
 
 与class对象相同，我们同样通过模拟对person元类对象调用.data函数，即对bits进行&FAST_DATA_MASK(0x00007ffffffffff8UL)运算，并转化为class_rw_t。
 
-![](https://upload-images.jianshu.io/upload_images/1434508-5d3c7609eaf50d31.png?imageMogr2/auto-orient/strip|imageView2/2/w/529)
+![image](https://upload-images.jianshu.io/upload_images/1434508-5d3c7609eaf50d31.png?imageMogr2/auto-orient/strip|imageView2/2/w/529)
 
 首先我们可以看到结构同personClassData相同，并且成员变量及属性列表等信息为空，而methods中存储着类方法personClassMethod。
 
 接着来验证isa及superclass指针的指向是否同上图序号标注一样。
 
-![](https://upload-images.jianshu.io/upload_images/1434508-3a7213b54d6ce4a6.png?imageMogr2/auto-orient/strip|imageView2/2/w/1135)
+![image](https://upload-images.jianshu.io/upload_images/1434508-3a7213b54d6ce4a6.png?imageMogr2/auto-orient/strip|imageView2/2/w/1135)
 
 上图中通过地址证明meta-class的isa指向基类的meta-class，基类的isa指针也指向自己。
 
-![](https://upload-images.jianshu.io/upload_images/1434508-5679c692b3c43724.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1076)
+![image](https://upload-images.jianshu.io/upload_images/1434508-5679c692b3c43724.png?imageMogr2/auto-orient/strip|imageView2/2/w/1076)
 
 上图中通过地址证明meta-class的superclass指向父类的meta-class，基类的meta-class的superclass指向基类的class类。
-
-![](https://upload-images.jianshu.io/upload_images/9610202-54e6b69e7dc9109f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
